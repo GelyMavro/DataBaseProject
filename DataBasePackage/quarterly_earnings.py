@@ -1,6 +1,7 @@
 import requests
 import json
 import pandas as pd
+from pymongo import MongoClient
 
 
 def pull_data():
@@ -65,8 +66,27 @@ def structured_data(data: str):
     return dictionary_list
 
 
+def mongodb_update(mongodb_uri: str, database_name: str, collection_name: str):
+    # Connect to MongoDB
+    client = MongoClient(mongodb_uri)
+    db = client[database_name]
+    collection = db[collection_name]
+
+    # Insert data into MongoDB collection
+    collection.insert_many(result)
+
+    print('You have your data in Mongodb!!')
+
+
 if __name__ == '__main__':
     data = pull_data()
     result = structured_data(data)
 
-    print(pd.DataFrame(result))
+    #print(pd.DataFrame(result))
+
+    # Connection information to MongoDB
+    mongodb_uri = "mongodb://localhost:27017/"
+    database_name = "projectDatabase"
+    collection_name = "projectdata"
+
+    mongodb_update(mongodb_uri, database_name, collection_name)
